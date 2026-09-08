@@ -1,6 +1,7 @@
 tensorflow==2.15.1
 mediapipe==0.10.21
-opencv-python==4.11.0.86
+opencv-python==4.11.0.86; sys_platform == "win32"
+opencv-python-headless==4.11.0.86; sys_platform != "win32"
 numpy>=1.23,<2.0
 ml-dtypes==0.3.2
 scikit-learn>=1.3
