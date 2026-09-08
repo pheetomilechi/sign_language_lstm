@@ -148,7 +148,7 @@ screen. Press `c` to clear the current sentence, `q` to quit.
 
 ### 7. Run the browser-based demo
 ```bash
-streamlit run streamlit_app.py
+streamlit run sign_language_lstm/streamlit_app.py
 ```
 Open the URL shown by Streamlit in your browser, allow camera access, and start
 the webcam. The live video includes the recognized sentence and the page provides
