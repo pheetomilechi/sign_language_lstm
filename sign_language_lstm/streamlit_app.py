@@ -61,7 +61,10 @@ def main():
         model, inverse_label_map = load_recognition_assets()
     except FileNotFoundError as error:
         st.error(str(error))
-        st.info("Train the model first, then refresh this page.")
+        st.info(
+            "Train the model locally and push the generated model files to GitHub before deploying. "
+            "The app needs the files in sign_language_lstm/models/ to be present in the repo."
+        )
         return
 
     ctx = webrtc_streamer(
