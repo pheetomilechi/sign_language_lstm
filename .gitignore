@@ -1,0 +1,16 @@
+venv/
+venv311/
+.venv/
+__pycache__/
+*.py[cod]
+.env
+
+# Local training outputs
+sign_language_lstm/data/keypoints/*
+sign_language_lstm/data/processed/*
+sign_language_lstm/logs/*
+
+# Keep directory placeholders
+!sign_language_lstm/data/keypoints/.gitkeep
+!sign_language_lstm/data/processed/.gitkeep
+!sign_language_lstm/logs/.gitkeep
