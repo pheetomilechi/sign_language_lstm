@@ -1,4 +1,4 @@
-tensorflow==2.15.1
+tensorflow-cpu==2.15.1
 mediapipe==0.10.21
 jax==0.4.30
 jaxlib==0.4.30
