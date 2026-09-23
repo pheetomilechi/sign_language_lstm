@@ -34,6 +34,37 @@ st.set_page_config(page_title="Sign Language LSTM",
                    page_icon="🤟", layout="wide")
 
 
+def build_rtc_configuration():
+    """Build a WebRTC ICE config from environment variables.
+
+    The app supports a comma-separated STUN list and optional TURN credentials.
+    This is important when the browser is behind NAT/firewalls or running in a
+    remote environment such as Codespaces, a VPS, or a cloud VM.
+    """
+    ice_servers = []
+
+    stun_servers = os.getenv("STUN_SERVERS")
+    if stun_servers:
+        for server in stun_servers.split(","):
+            cleaned = server.strip()
+            if cleaned:
+                ice_servers.append({"urls": [cleaned]})
+    else:
+        ice_servers.append({"urls": ["stun:stun.l.google.com:19302"]})
+
+    turn_url = os.getenv("TURN_URL")
+    if turn_url:
+        turn_username = os.getenv("TURN_USERNAME", "")
+        turn_credential = os.getenv("TURN_CREDENTIAL", "")
+        ice_servers.append({
+            "urls": [turn_url],
+            "username": turn_username,
+            "credential": turn_credential,
+        })
+
+    return {"iceServers": ice_servers}
+
+
 @st.cache_resource(show_spinner="Loading the sign language model...")
 def load_recognition_assets():
     ensure_model_files_exist()
@@ -91,9 +122,7 @@ def main():
         mode=WebRtcMode.SENDRECV,
         video_processor_factory=lambda: SignLanguageVideoProcessor(
             model, inverse_label_map),
-        rtc_configuration={
-            "iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]
-        },
+        rtc_configuration=build_rtc_configuration(),
         media_stream_constraints={"video": True, "audio": False},
         async_processing=True,
     )
