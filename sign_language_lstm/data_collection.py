@@ -20,11 +20,30 @@ Controls while running:
 """
 
 import os
+import sys
+
+if __package__ in (None, ""):
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    if project_root not in sys.path:
+        sys.path.insert(0, project_root)
+    from sign_language_lstm.config import ACTIONS, DATA_PATH, NO_SEQUENCES, SEQUENCE_LENGTH
+    from sign_language_lstm.mp_utils import (
+        mediapipe_detection,
+        draw_landmarks,
+        extract_keypoints,
+        new_holistic_model,
+    )
+else:
+    from .config import ACTIONS, DATA_PATH, NO_SEQUENCES, SEQUENCE_LENGTH
+    from .mp_utils import (
+        mediapipe_detection,
+        draw_landmarks,
+        extract_keypoints,
+        new_holistic_model,
+    )
+
 import cv2
 import numpy as np
-
-from config import ACTIONS, DATA_PATH, NO_SEQUENCES, SEQUENCE_LENGTH
-from mp_utils import mediapipe_detection, draw_landmarks, extract_keypoints, new_holistic_model
 
 
 def make_folders():

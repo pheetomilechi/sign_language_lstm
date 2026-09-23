@@ -11,6 +11,16 @@ Usage:
 """
 
 import os
+import sys
+
+if __package__ in (None, ""):
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    if project_root not in sys.path:
+        sys.path.insert(0, project_root)
+    from sign_language_lstm.config import ACTIONS, PROCESSED_PATH, MODEL_PATH, MODEL_DIR
+else:
+    from .config import ACTIONS, PROCESSED_PATH, MODEL_PATH, MODEL_DIR
+
 import numpy as np
 import matplotlib
 matplotlib.use("Agg")  # headless-safe backend
@@ -18,8 +28,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 from tensorflow.keras.models import load_model
-
-from config import ACTIONS, PROCESSED_PATH, MODEL_PATH, MODEL_DIR
 
 
 def main():

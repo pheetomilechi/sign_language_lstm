@@ -12,15 +12,26 @@ Output:
 """
 
 import os
+import sys
 import json
+
+if __package__ in (None, ""):
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    if project_root not in sys.path:
+        sys.path.insert(0, project_root)
+    from sign_language_lstm.config import (
+        ACTIONS, DATA_PATH, PROCESSED_PATH, NO_SEQUENCES, SEQUENCE_LENGTH,
+        TEST_SIZE, RANDOM_STATE, LABEL_MAP_PATH, MODEL_DIR,
+    )
+else:
+    from .config import (
+        ACTIONS, DATA_PATH, PROCESSED_PATH, NO_SEQUENCES, SEQUENCE_LENGTH,
+        TEST_SIZE, RANDOM_STATE, LABEL_MAP_PATH, MODEL_DIR,
+    )
+
 import numpy as np
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.utils import to_categorical
-
-from config import (
-    ACTIONS, DATA_PATH, PROCESSED_PATH, NO_SEQUENCES, SEQUENCE_LENGTH,
-    TEST_SIZE, RANDOM_STATE, LABEL_MAP_PATH, MODEL_DIR,
-)
 
 
 def load_dataset():

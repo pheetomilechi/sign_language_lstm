@@ -15,11 +15,20 @@ Architecture rationale:
       exactly what the continuous-prediction sliding-window logic needs.
 """
 
+import os
+import sys
+
+if __package__ in (None, ""):
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    if project_root not in sys.path:
+        sys.path.insert(0, project_root)
+    from sign_language_lstm.config import SEQUENCE_LENGTH, FEATURE_LENGTH, LEARNING_RATE
+else:
+    from .config import SEQUENCE_LENGTH, FEATURE_LENGTH, LEARNING_RATE
+
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout, Masking
 from tensorflow.keras.optimizers import Adam
-
-from config import SEQUENCE_LENGTH, FEATURE_LENGTH, LEARNING_RATE
 
 
 def build_model(num_classes: int) -> Sequential:
@@ -52,6 +61,12 @@ def build_model(num_classes: int) -> Sequential:
 
 if __name__ == "__main__":
     # Quick sanity check: prints the architecture summary.
-    from config import ACTIONS
+    if __package__ in (None, ""):
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+        if project_root not in sys.path:
+            sys.path.insert(0, project_root)
+        from sign_language_lstm.config import ACTIONS
+    else:
+        from .config import ACTIONS
     m = build_model(num_classes=len(ACTIONS))
     m.summary()

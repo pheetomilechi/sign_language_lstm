@@ -10,11 +10,20 @@ Keeping this logic in one place ensures data collection, training, and real-time
 inference all extract features in exactly the same way.
 """
 
+import os
+import sys
+
+if __package__ in (None, ""):
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    if project_root not in sys.path:
+        sys.path.insert(0, project_root)
+    from sign_language_lstm.config import USE_FACE_MESH
+else:
+    from .config import USE_FACE_MESH
+
 import numpy as np
 import cv2
 import mediapipe as mp
-
-from config import USE_FACE_MESH
 
 mp_holistic = mp.solutions.holistic
 mp_drawing = mp.solutions.drawing_utils

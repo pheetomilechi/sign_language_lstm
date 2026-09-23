@@ -2,21 +2,37 @@
 
 import json
 import os
+import sys
 from collections import Counter, deque
 from threading import RLock
 
 import numpy as np
 
-from config import (
-    COOLDOWN_FRAMES,
-    LABEL_MAP_PATH,
-    MAX_SENTENCE_LENGTH,
-    MODEL_PATH,
-    PREDICTION_THRESHOLD,
-    SEQUENCE_LENGTH,
-    STABILITY_WINDOW,
-)
-from mp_utils import draw_landmarks, extract_keypoints, mediapipe_detection
+if __package__ in (None, ""):
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    if project_root not in sys.path:
+        sys.path.insert(0, project_root)
+    from sign_language_lstm.config import (
+        COOLDOWN_FRAMES,
+        LABEL_MAP_PATH,
+        MAX_SENTENCE_LENGTH,
+        MODEL_PATH,
+        PREDICTION_THRESHOLD,
+        SEQUENCE_LENGTH,
+        STABILITY_WINDOW,
+    )
+    from sign_language_lstm.mp_utils import draw_landmarks, extract_keypoints, mediapipe_detection
+else:
+    from .config import (
+        COOLDOWN_FRAMES,
+        LABEL_MAP_PATH,
+        MAX_SENTENCE_LENGTH,
+        MODEL_PATH,
+        PREDICTION_THRESHOLD,
+        SEQUENCE_LENGTH,
+        STABILITY_WINDOW,
+    )
+    from .mp_utils import draw_landmarks, extract_keypoints, mediapipe_detection
 
 
 def load_label_map_inverse():

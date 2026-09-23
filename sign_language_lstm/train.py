@@ -10,14 +10,26 @@ Usage:
 """
 
 import os
+import sys
+
+if __package__ in (None, ""):
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    if project_root not in sys.path:
+        sys.path.insert(0, project_root)
+    from sign_language_lstm.config import (
+        ACTIONS, PROCESSED_PATH, MODEL_DIR, MODEL_PATH, LOG_DIR,
+        EPOCHS, BATCH_SIZE,
+    )
+    from sign_language_lstm.model import build_model
+else:
+    from .config import (
+        ACTIONS, PROCESSED_PATH, MODEL_DIR, MODEL_PATH, LOG_DIR,
+        EPOCHS, BATCH_SIZE,
+    )
+    from .model import build_model
+
 import numpy as np
 from tensorflow.keras.callbacks import TensorBoard, EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
-
-from config import (
-    ACTIONS, PROCESSED_PATH, MODEL_DIR, MODEL_PATH, LOG_DIR,
-    EPOCHS, BATCH_SIZE,
-)
-from model import build_model
 
 
 def load_processed():

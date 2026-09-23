@@ -36,13 +36,32 @@ which is the practical behavior expected of a continuous sign-language
 recognizer (as opposed to single-word/single-clip classifiers).
 """
 
+import os
+import sys
+
+if __package__ in (None, ""):
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    if project_root not in sys.path:
+        sys.path.insert(0, project_root)
+    from sign_language_lstm.config import MODEL_PATH
+    from sign_language_lstm.mp_utils import new_holistic_model
+    from sign_language_lstm.recognizer import (
+        ContinuousRecognizer,
+        ensure_model_files_exist,
+        load_label_map_inverse,
+    )
+else:
+    from .config import MODEL_PATH
+    from .mp_utils import new_holistic_model
+    from .recognizer import (
+        ContinuousRecognizer,
+        ensure_model_files_exist,
+        load_label_map_inverse,
+    )
+
 import cv2
 import numpy as np
 from tensorflow.keras.models import load_model
-
-from config import MODEL_PATH
-from mp_utils import new_holistic_model
-from recognizer import ContinuousRecognizer, ensure_model_files_exist, load_label_map_inverse
 
 
 def run():

@@ -1,10 +1,17 @@
 """Convert the trained Keras model to TensorFlow Lite."""
 
 import os
+import sys
+
+if __package__ in (None, ""):
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    if project_root not in sys.path:
+        sys.path.insert(0, project_root)
+    from sign_language_lstm.config import MODEL_DIR, MODEL_PATH
+else:
+    from .config import MODEL_DIR, MODEL_PATH
 
 import tensorflow as tf
-
-from config import MODEL_DIR, MODEL_PATH
 
 
 model = tf.keras.models.load_model(MODEL_PATH)
