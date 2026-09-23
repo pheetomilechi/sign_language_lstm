@@ -55,6 +55,27 @@ py -3.11 -m venv venv
 pip install -r requirements.txt
 ```
 
+## Production / remote webcam access
+
+This app uses WebRTC for the browser webcam. For local use it works without extra setup. For remote access via a public link, WebRTC often needs a real TURN server because browsers behind NAT or firewalls cannot establish a direct webcam connection.
+
+Set the following environment variables in your hosting platform before launching the app:
+
+```bash
+export STUN_SERVERS="stun:stun.l.google.com:19302,stun:stun1.l.google.com:19302"
+export TURN_URL="turn:your-turn-server.example.com:3478"
+export TURN_USERNAME="your-user"
+export TURN_CREDENTIAL="your-password"
+```
+
+Then start the app with:
+
+```bash
+streamlit run sign_language_lstm/streamlit_app.py --server.address 0.0.0.0 --server.port 8501
+```
+
+Without a TURN server, remote browser webcam access may fail even if the app is deployed successfully.
+
 ## Usage
 
 ### Collect training data

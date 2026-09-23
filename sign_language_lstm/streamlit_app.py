@@ -65,6 +65,10 @@ def build_rtc_configuration():
     return {"iceServers": ice_servers}
 
 
+def remote_access_warning_enabled():
+    return os.getenv("ENABLE_REMOTE_WEBRTC_WARNING", "true").lower() in {"1", "true", "yes", "on"}
+
+
 @st.cache_resource(show_spinner="Loading the sign language model...")
 def load_recognition_assets():
     ensure_model_files_exist()
@@ -106,6 +110,12 @@ class SignLanguageVideoProcessor(VideoProcessorBase):
 def main():
     st.title("Continuous Sign Language Recognition")
     st.caption("Use the webcam to build a sentence from recognized signs.")
+
+    if remote_access_warning_enabled() and not os.getenv("TURN_URL"):
+        st.warning(
+            "Remote webcam access may fail without a TURN server. "
+            "Set TURN_URL, TURN_USERNAME, and TURN_CREDENTIAL in your deployment environment."
+        )
 
     try:
         model, inverse_label_map = load_recognition_assets()
