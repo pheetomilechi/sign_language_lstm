@@ -34,28 +34,54 @@ st.set_page_config(page_title="Sign Language LSTM",
                    page_icon="🤟", layout="wide")
 
 
-def build_rtc_configuration():
-    """Build a WebRTC ICE config from environment variables.
+def _get_runtime_value(name, default=None):
+    """Read a config value from environment variables or Streamlit secrets."""
+    value = os.getenv(name)
+    if value not in (None, ""):
+        return value
 
-    The app supports a comma-separated STUN list and optional TURN credentials.
+    try:
+        if hasattr(st, "secrets") and name in st.secrets:
+            value = st.secrets[name]
+            if value not in (None, ""):
+                return value
+    except Exception:
+        pass
+
+    return default
+
+
+def build_rtc_configuration():
+    """Build a WebRTC ICE config from env/secrets values.
+
+    The app supports both a comma-separated STUN list and the simpler
+    single-value Metered setup using STUN_URL/TURN_URL/TURN_USERNAME/TURN_CREDENTIAL.
     This is important when the browser is behind NAT/firewalls or running in a
     remote environment such as Codespaces, a VPS, or a cloud VM.
     """
     ice_servers = []
 
-    stun_servers = os.getenv("STUN_SERVERS")
-    if stun_servers:
-        for server in stun_servers.split(","):
-            cleaned = server.strip()
-            if cleaned:
-                ice_servers.append({"urls": [cleaned]})
+    stun_urls = []
+    stun_servers_value = _get_runtime_value("STUN_SERVERS")
+    if stun_servers_value:
+        stun_urls.extend(
+            server.strip() for server in stun_servers_value.split(",") if server.strip()
+        )
+
+    stun_url_value = _get_runtime_value("STUN_URL")
+    if stun_url_value:
+        stun_urls.append(stun_url_value.strip())
+
+    if stun_urls:
+        for server in dict.fromkeys(stun_urls):
+            ice_servers.append({"urls": [server]})
     else:
         ice_servers.append({"urls": ["stun:stun.l.google.com:19302"]})
 
-    turn_url = os.getenv("TURN_URL")
+    turn_url = _get_runtime_value("TURN_URL")
     if turn_url:
-        turn_username = os.getenv("TURN_USERNAME", "")
-        turn_credential = os.getenv("TURN_CREDENTIAL", "")
+        turn_username = _get_runtime_value("TURN_USERNAME", "")
+        turn_credential = _get_runtime_value("TURN_CREDENTIAL", "")
         ice_servers.append({
             "urls": [turn_url],
             "username": turn_username,

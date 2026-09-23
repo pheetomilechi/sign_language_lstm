@@ -10,11 +10,11 @@ services:
         value: 3.11.9
       - key: STREAMLIT_SERVER_HEADLESS
         value: "true"
-      - key: STUN_SERVERS
-        value: stun:stun.l.google.com:19302,stun:stun1.l.google.com:19302
+      - key: STUN_URL
+        value: "stun:stun.relay.metered.ca:80"
       - key: TURN_URL
-        value: ""
+        value: "turn:standard.relay.metered.ca:80"
       - key: TURN_USERNAME
-        value: ""
+        value: "your-metered-username"
       - key: TURN_CREDENTIAL
-        value: ""
+        value: "your-metered-password"
